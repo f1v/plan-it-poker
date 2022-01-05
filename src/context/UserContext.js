@@ -4,7 +4,7 @@ export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
   const [users, setUsers] = useState([]);
-  const [username, setUsername] = useState('');
+  const [username, setUsername] = useState(localStorage.getItem("pokerName") || '');
   const [vote, setVote] = useState(0);
 
   return (
