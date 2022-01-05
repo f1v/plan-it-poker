@@ -1,5 +1,9 @@
-import React from 'react';
+import React, { Fragment } from 'react';
+import Timer from '../../components/Timer'
 
 export const MainPage = () => {
-  return <h4>Welcome to Plan-It Poker!</h4>;
+  return (<Fragment>
+    <h4>Welcome to Plan-It Poker!</h4>
+    <Timer />
+  </Fragment>);
 };
