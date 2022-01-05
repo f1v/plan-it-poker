@@ -1,14 +1,13 @@
 import React, {
   Fragment,
-  useContext,
   useEffect,
   useState
 } from 'react';
 import { UserHub } from '../../components/User/UserHub';
 import {
-  CardsDisplay
+  VotingHub
 }
-from '../../components/CardsDisplay';
+from '../../components/VotingHub';
 import io from "socket.io-client";
 
 export const MainPage = () => {
@@ -33,19 +32,16 @@ export const MainPage = () => {
   return (
     <Fragment>
       <h4>Welcome to Plan-It Poker!</h4>
-      <div
+      {socket ? <div
         style={{
           display: 'flex',
           alignItems: 'center',
           padding: '10px',
         }}
       >
-        {socket ? <CardsDisplay socket={socket} /> : []}
+        <VotingHub socket={socket} />
         <UserHub message={'Test Message'} />
-        {socket ? <div>THIS IS THE VOTNG HISTORY:
-      {votes}
-    </div> : []}
-      </div>
+      </div> : []}
     </Fragment>
   );
 };
