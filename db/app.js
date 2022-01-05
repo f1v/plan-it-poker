@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const port = 3000;
+const port = 4000;
 const http = require("http");
 const server = http.createServer(app);
 const { Server } = require("socket.io");
@@ -12,8 +12,9 @@ app.get("/", (req, res) => {
 
 io.on("connection", (socket) => {
   console.log("a user connected");
-  socket.on("chat message", (msg) => {
-    io.emit("chat message", msg);
+  socket.on('vote', (msg) => {
+    console.log("api log", msg);
+    io.emit('vote', msg);
   });
   socket.on("disconnect", () => {
     console.log("user disconnected");

@@ -1,6 +1,7 @@
 {
   "name": "hr-plan-it-poker",
   "version": "0.1.0",
+  "proxy": "http://localhost:4000",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.1",
@@ -13,10 +14,12 @@
     "react-dom": "^17.0.2",
     "react-scripts": "5.0.0",
     "socket.io": "^4.4.0",
+    "socket.io-client": "^4.4.0",
     "web-vitals": "^2.1.2"
   },
   "scripts": {
     "start": "react-scripts start",
+    "start-db": "cd db && node app.js",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
