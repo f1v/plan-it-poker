@@ -10,9 +10,17 @@ export const UserProvider = ({ children }) => {
   return (
     <UserContext.Provider
       value={{
+        finishedVoting: !!vote,
         loggedIn: !!username,
         username,
-        users: [...users, username ? { name: username, vote } : {}],
+        users: [
+          ...users,
+          // Dummy Data
+          { name: 'Bob', vote: 1 },
+          { name: 'Rick', vote: 5 },
+          // end Dummy Data
+          username ? { name: username, vote } : {}, // refactor how current user is added
+        ],
         vote,
         setUsername,
         setVote,
