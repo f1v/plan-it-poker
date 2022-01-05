@@ -24,6 +24,7 @@ export const LoginForm = () => {
           onClick={(e) => {
             e.preventDefault();
             setUsername(name);
+            localStorage.setItem("pokerName", name)
           }}
         >
           Login
