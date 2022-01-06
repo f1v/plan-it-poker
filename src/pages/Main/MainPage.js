@@ -23,7 +23,7 @@ export const MainPage = () => {
     return () => {
       newSocket.disconnect();
     };
-  }, [])
+  }, [userObj])
 
   useEffect(() => {
     console.log('second useEffect running')
