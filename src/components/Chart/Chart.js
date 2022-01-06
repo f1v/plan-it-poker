@@ -8,7 +8,12 @@ import './Chart.scss';
 export const Chart = () => {
   const { storeContext } = useContext(UserContext);
   const [votes] = useState(
-    compact(map(storeContext, (userVote) => userVote.vote))
+    compact(
+      map(
+        storeContext,
+        (userVote) => typeof userVote.vote === 'number' && userVote.vote
+      )
+    )
   );
   const groupedUsers = groupBy(storeContext, 'vote');
 
@@ -32,7 +37,8 @@ export const Chart = () => {
 
   const formatData = () => {
     return map(groupedUsers, (voteData) => {
-      const label = `Vote Revealed: ${voteData[0].vote}`;
+      const vote = voteData[0].vote;
+      const label = `Vote Revealed: ${vote === null ? 'did not vote' : vote}`;
       return {
         label,
         value: voteData.length,
@@ -46,8 +52,8 @@ export const Chart = () => {
         formatValues={() => (votes ? `Avg Vote: ${average}` : 'No votes')}
         data={formatData()}
         legend={false}
-        outerRadius={0.6}
-        innerRadius={0.5}
+        outerRadius={0.7}
+        innerRadius={0.6}
         className='vote-chart'
         clickToggle={false}
       />
