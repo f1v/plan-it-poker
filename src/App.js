@@ -4,6 +4,7 @@ import { LoginPage } from './pages/Login/LoginPage';
 import { MainPage } from './pages/Main/MainPage';
 import { UserContext } from './context/UserContext';
 import './App.css';
+import { LandingPage } from './pages/Landing/LandingPage';
 
 function App() {
   const { loggedIn } = useContext(UserContext);
@@ -14,6 +15,7 @@ function App() {
   return (
     <div className='App'>
       <Routes>
+        <Route path='/' element={<LandingPage />}/>
         <Route path='/:id' element={loggedIn ? <MainPage /> : <LoginPage />} />
       </Routes>
     </div>

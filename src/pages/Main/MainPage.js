@@ -3,6 +3,7 @@ import { UserContext } from '../../context/UserContext';
 import { UserHub } from '../../components/User/UserHub';
 import { VotingHub } from '../../components/VotingHub';
 import io from 'socket.io-client';
+import { useParams } from 'react-router-dom';
 
 export const MainPage = () => {
   const { userObj, userId, setStoreContext } = useContext(UserContext);
@@ -10,13 +11,18 @@ export const MainPage = () => {
   const [cardsFlipped, setCardsFlipped] = useState(false);
   const [cardValues, setCardValues] = useState([1, 2, 3, 4, 5, 6, 7]);
   const [store, setStore] = useState([]);
+  const { id } = useParams();
   const ENDPOINT = process.env.REACT_APP_ENDPOINT
-    ? `${process.env.REACT_APP_ENDPOINT}`
-    : 'http://localhost:4000';
+    ? `${process.env.REACT_APP_ENDPOINT}` 
+    : `http://localhost:4000`;
+    console.log(ENDPOINT);
 
   useEffect(() => {
     console.log('first useEffect running');
     const newSocket = io(ENDPOINT, {
+      query: {
+        id: id
+      },
       transports: ['websocket'],
     });
 
@@ -31,6 +37,9 @@ export const MainPage = () => {
   useEffect(() => {
     console.log('second useEffect running');
     const newSocket = io(ENDPOINT, {
+      query: {
+        id: id
+      },
       transports: ['websocket'],
     });
     newSocket.emit('username', userObj);
@@ -65,7 +74,10 @@ export const MainPage = () => {
   useEffect(() => {
     console.log('third useEffect running');
     const newSocket = io(ENDPOINT, {
-      transports: ['websocket'],
+      query: {
+        id: id,
+      },
+      transports: ["websocket"],
     });
 
     newSocket.emit('cards flipped', cardsFlipped);
@@ -78,7 +90,10 @@ export const MainPage = () => {
   useEffect(() => {
     console.log('Fourth useEffect running');
     const newSocket = io(ENDPOINT, {
-      transports: ['websocket'],
+      query: {
+        id: id,
+      },
+      transports: ["websocket"],
     });
 
     newSocket.emit('cardValues', cardValues);
@@ -90,7 +105,10 @@ export const MainPage = () => {
 
   const resetVoting = () => {
     const newSocket = io(ENDPOINT, {
-      transports: ['websocket'],
+      query: {
+        id: id,
+      },
+      transports: ["websocket"],
     });
 
     socket.emit('reset');
