@@ -3,6 +3,6 @@ import { Chart } from '../components/Chart/Chart';
 
 export const VoteDisplay = ({ votes }) => (
   <div>
-    <Chart />
+    <Chart votes={votes} />
   </div>
 );

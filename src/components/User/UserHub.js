@@ -1,21 +1,20 @@
-import React, { useContext } from 'react';
-import { UserContext } from '../../context/UserContext';
-import Timer from '../../components/Timer';
+import React from 'react';
 import _ from 'lodash';
 
-export const UserHub = ({ message }) => {
-  const { users } = useContext(UserContext);
+export const UserHub = ({ message, store, cardsFlipped }) => {
 
-  const playerItem = (player) => (
+  const playerItem = (player) => {
+    const playerStatusMessage = player.vote ? 'Voted' : '...waiting'
+    const playerValues = cardsFlipped ? player.vote || 'No vote' : playerStatusMessage;
+    return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
       <span>
-        {player.name}: {player.vote !== 0 ? 'Voted' : '(...waiting)'}
+        {player.username}: {playerValues}
       </span>
-      <Timer />
     </div>
-  );
+  )};
 
-  const playersList = () => _.map(users, (user) => playerItem(user));
+  const playersList = () => _.map(store, (user) => playerItem(user));
 
   const displayMessage = () => (
     <div
@@ -25,7 +24,7 @@ export const UserHub = ({ message }) => {
         marginBottom: '10px',
       }}
     >
-      {message}
+      {message || 'User Hub'}
     </div>
   );
 
@@ -40,8 +39,7 @@ export const UserHub = ({ message }) => {
           marginBottom: '10px',
         }}
       >
-        <h5 style={{ paddingRight: '10px' }}>Players:</h5>
-        <Timer />
+        <h5 style={{ paddingRight: '10px' }}>{store.map( u => u.username).length} Users</h5>
       </div>
 
       {playersList()}

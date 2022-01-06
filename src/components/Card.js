@@ -1,19 +1,33 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { UserContext } from '../context/UserContext';
 
-export const Card = ({ value, socket }) => {
-  const { setVote } = useContext(UserContext);
+export const Card = ({ value, socket, disabled, selected }) => {
+  const { username } = useContext(UserContext);
+  const [isSelected, setIsSelected] = useState(false);
+
+  useEffect(() => {
+	setIsSelected(selected);
+  }, [selected])
 
   const emitValue = (value) => {
-    socket.emit('vote', value);
-    console.log('card value clicked', value);
-    setVote(value);
+	if(selected) {
+		socket.emit('vote', {
+			username: username,
+			vote: null,
+		});
+	} else {
+		socket.emit('vote', {
+			username: username,
+			vote: value
+		});
+	}
+	setIsSelected(!isSelected);
   };
 
   return (
     <div
-      onClick={() => emitValue(value)}
-      style={{ border: '1px solid black', height: '200px', width: '200px' }}
+      onClick={disabled ? () => {} : () => emitValue(value)}
+      style={{ border: '1px solid black', height: '200px', width: '200px', backgroundColor: selected ? 'blue' : disabled ? 'grey' : 'white' }}
     >
       {value}
     </div>

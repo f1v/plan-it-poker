@@ -5,24 +5,73 @@ import { VotingHub } from '../../components/VotingHub';
 import io from 'socket.io-client';
 
 export const MainPage = () => {
-  const { finishedVoting } = useContext(UserContext);
+  const { username } = useContext(UserContext);
   const [socket, setSocket] = useState(null);
-  const [votes, setVotes] = useState('');
+  const [cardsFlipped, setCardsFlipped] = useState(false);
+  const [store, setStore] = useState([]);
   const ENDPOINT = 'http://localhost:4000';
+
   useEffect(() => {
     const newSocket = io(ENDPOINT, {
       transports: ['websocket'],
     });
+
     setSocket(newSocket);
-    newSocket.on('vote', (vote) => {
-      setVotes(`${votes}, ${vote}`);
-      console.log('vote is in');
-    });
+    newSocket.emit('username', username)
 
     return () => {
       newSocket.disconnect();
     };
-  }, [setSocket, votes]);
+  }, [setSocket])
+
+  useEffect(() => {
+    const newSocket = io(ENDPOINT, {
+      transports: ['websocket'],
+    });
+    newSocket.emit('username', username)
+    newSocket.on('vote', (updatedStore) => {
+      setStore(updatedStore);
+    });
+
+    newSocket.on('users', u => {
+      setStore(u)
+    })
+
+    newSocket.on('reset', u => setStore(u))
+
+    newSocket.on('cards flipped', (msg) => {
+      setCardsFlipped(msg);
+    })
+
+    return () => {
+      newSocket.disconnect();
+    };
+  }, [setStore]);
+
+  useEffect(() => {
+    const newSocket = io(ENDPOINT, {
+      transports: ['websocket'],
+    });
+
+    newSocket.emit('cards flipped', cardsFlipped);
+
+    return () => {
+      newSocket.disconnect();
+    };
+  }, [cardsFlipped])
+
+  const resetVoting = () => {
+    const newSocket = io(ENDPOINT, {
+      transports: ['websocket'],
+    });
+
+    socket.emit('reset');
+
+    newSocket.disconnect();
+  }
+
+  const mySocketInfo = store.find(u => u.username === username);
+  const vote = mySocketInfo && mySocketInfo.vote;
 
   return (
     <Fragment>
@@ -35,8 +84,15 @@ export const MainPage = () => {
             padding: '10px',
           }}
         >
-          <VotingHub voting={!finishedVoting} socket={socket} />
-          <UserHub message={'Test Message'} />
+          <VotingHub vote={vote} socket={socket} cardsFlipped={cardsFlipped} votes={store.map(u => u.vote)} />
+          <div>
+            <UserHub
+          store={store}
+          cardsFlipped={cardsFlipped}
+          />
+          <button disabled={!store.map(u => u.vote).some(el => el !== null)} style={{width: '100%', marginTop: '50px', height: '50px'}} onClick={() => {setCardsFlipped(!cardsFlipped)}}>Flip Cards</button>
+          {cardsFlipped && <button style={{width: '100%', marginTop: '50px', height: '50px'}} onClick={resetVoting}>Reset</button>}
+          </div>
         </div>
       ) : (
         []
