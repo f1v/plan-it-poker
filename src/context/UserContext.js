@@ -3,19 +3,22 @@ import React, { createContext, useState, useEffect } from 'react';
 export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-  const [userId, setUserId] = useState(localStorage.getItem("userId") || '');
-  const [username, setUsername] = useState(localStorage.getItem("pokerName") || '');
+  const [userId, setUserId] = useState(localStorage.getItem('userId') || '');
+  const [username, setUsername] = useState(
+    localStorage.getItem('pokerName') || ''
+  );
   const [vote, setVote] = useState(0);
   const [userObj, setUserObj] = useState({});
+  const [storeContext, setStoreContext] = useState({});
 
   useEffect(() => {
     const newUserObj = {
       username: username,
       vote: vote || null,
       userId: userId,
-    }
+    };
     setUserObj(newUserObj);
-  }, [username, vote, userId])
+  }, [username, vote, userId]);
 
   return (
     <UserContext.Provider
@@ -26,8 +29,10 @@ export const UserProvider = ({ children }) => {
         userId,
         userObj,
         vote,
+        storeContext,
         setUserId,
         setUsername,
+        setStoreContext,
         setVote,
       }}
     >

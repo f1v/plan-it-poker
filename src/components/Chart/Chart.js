@@ -1,26 +1,57 @@
-import React from 'react';
+import React, { useState, useContext } from 'react';
 import DonutChart from 'react-donut-chart';
+import { compact, groupBy, map } from 'lodash';
+import { UserContext } from '../../context/UserContext';
+import { Legend } from './Legend';
+import './Chart.scss';
 
-export const Chart = ({votes}) => {
-  const findAverage = votes => votes.length > 1 ? votes.reduce((a, b) => a + b) / votes.length : 0;
-  const average = findAverage(votes);
+export const Chart = () => {
+  const { storeContext } = useContext(UserContext);
+  const [votes] = useState(
+    compact(map(storeContext, (userVote) => userVote.vote))
+  );
+  const groupedUsers = groupBy(storeContext, 'vote');
+
+  const colors = [
+    'turquoise',
+    'purple',
+    'red',
+    'teal',
+    'yellow',
+    'brown',
+    'blue',
+    'green',
+    'orange',
+    'black',
+  ];
+
+  const findAverage = (votes) => {
+    return votes.length >= 1 ? votes.reduce((a, b) => a + b) / votes.length : 0;
+  };
+  const average = parseFloat(findAverage(votes).toFixed(2));
 
   const formatData = () => {
-    const uniqueVotes = [...new Set(votes)];
-    return uniqueVotes.map(v => ({
-      label: '',
-      value: v,
-    }));
-}
+    return map(groupedUsers, (voteData) => {
+      const label = `Vote Revealed: ${voteData[0].vote}`;
+      return {
+        label,
+        value: voteData.length,
+      };
+    });
+  };
   return (
-    <div>
+    <div style={{ display: 'flex' }}>
       <DonutChart
-        formatValues={ () => 
-          votes ? `Avg Vote: ${average}` : 'No votes'
-        }
+        colors={colors}
+        formatValues={() => (votes ? `Avg Vote: ${average}` : 'No votes')}
         data={formatData()}
         legend={false}
+        outerRadius={0.6}
+        innerRadius={0.5}
+        className='vote-chart'
+        clickToggle={false}
       />
+      <Legend users={groupedUsers} />
     </div>
   );
 };
