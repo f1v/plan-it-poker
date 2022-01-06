@@ -92,6 +92,7 @@ export const MainPage = () => {
             <UserHub
           store={store}
           cardsFlipped={cardsFlipped}
+          socket={socket}
           />
           <button disabled={!store.map(u => u.vote).some(el => el !== null)} style={{width: '100%', marginTop: '50px', height: '50px'}} onClick={() => {setCardsFlipped(!cardsFlipped)}}>Flip Cards</button>
           {cardsFlipped && <button style={{width: '100%', marginTop: '50px', height: '50px'}} onClick={resetVoting}>Reset</button>}

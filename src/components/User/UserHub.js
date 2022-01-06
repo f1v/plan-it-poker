@@ -1,13 +1,21 @@
 import React from 'react';
 import _ from 'lodash';
 
-export const UserHub = ({ message, store, cardsFlipped }) => {
+export const UserHub = ({ message, store, socket, cardsFlipped }) => {
+
+  const kickUser = userId => {
+    console.log('kicking', userId);
+    socket.emit('kickUser', userId);
+  }
 
   const playerItem = (player) => {
     const playerStatusMessage = player.vote ? 'Voted' : '...waiting'
     const playerValues = cardsFlipped ? player.vote || 'No vote' : playerStatusMessage;
     return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
+      <span>
+        <button onClick={() => kickUser(player.userId)}>Kick</button>
+      </span>
       <span>
         {player.username}: {playerValues}
       </span>

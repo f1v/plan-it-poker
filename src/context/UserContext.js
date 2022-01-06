@@ -6,7 +6,7 @@ export const UserProvider = ({ children }) => {
   const [userId, setUserId] = useState(localStorage.getItem("userId") || '');
   const [username, setUsername] = useState(localStorage.getItem("pokerName") || '');
   const [vote, setVote] = useState(0);
-  const [userObj, setUserObj] = useState({})
+  const [userObj, setUserObj] = useState({});
 
   useEffect(() => {
     const newUserObj = {
