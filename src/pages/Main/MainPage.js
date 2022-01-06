@@ -9,7 +9,7 @@ export const MainPage = () => {
   const [socket, setSocket] = useState(null);
   const [cardsFlipped, setCardsFlipped] = useState(false);
   const [store, setStore] = useState([]);
-  const ENDPOINT = 'http://localhost:4000';
+  const ENDPOINT = process.env.ENDPOINT ? process.env.ENDPOINT :'http://localhost:4000';
 
   useEffect(() => {
     console.log('first useEffect running')
