@@ -1,11 +1,21 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useState, useEffect } from 'react';
 
 export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-  const [users, setUsers] = useState([]);
+  const [userId, setUserId] = useState(localStorage.getItem("userId") || '');
   const [username, setUsername] = useState(localStorage.getItem("pokerName") || '');
   const [vote, setVote] = useState(0);
+  const [userObj, setUserObj] = useState({})
+
+  useEffect(() => {
+    const newUserObj = {
+      username: username,
+      vote: vote || null,
+      userId: userId,
+    }
+    setUserObj(newUserObj);
+  }, [username, vote, userId])
 
   return (
     <UserContext.Provider
@@ -13,15 +23,10 @@ export const UserProvider = ({ children }) => {
         finishedVoting: !!vote,
         loggedIn: !!username,
         username,
-        users: [
-          ...users,
-          // Dummy Data
-          { name: 'Bob', vote: 1 },
-          { name: 'Rick', vote: 5 },
-          // end Dummy Data
-          username ? { name: username, vote } : {}, // refactor how current user is added
-        ],
+        userId,
+        userObj,
         vote,
+        setUserId,
         setUsername,
         setVote,
       }}

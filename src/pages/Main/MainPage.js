@@ -5,30 +5,32 @@ import { VotingHub } from '../../components/VotingHub';
 import io from 'socket.io-client';
 
 export const MainPage = () => {
-  const { username } = useContext(UserContext);
+  const { userObj, userId } = useContext(UserContext);
   const [socket, setSocket] = useState(null);
   const [cardsFlipped, setCardsFlipped] = useState(false);
   const [store, setStore] = useState([]);
   const ENDPOINT = 'http://localhost:4000';
 
   useEffect(() => {
+    console.log('first useEffect running')
     const newSocket = io(ENDPOINT, {
       transports: ['websocket'],
     });
 
     setSocket(newSocket);
-    newSocket.emit('username', username)
+    newSocket.emit('username', userObj)
 
     return () => {
       newSocket.disconnect();
     };
-  }, [setSocket])
+  }, [])
 
   useEffect(() => {
+    console.log('second useEffect running')
     const newSocket = io(ENDPOINT, {
       transports: ['websocket'],
     });
-    newSocket.emit('username', username)
+    newSocket.emit('username', userObj)
     newSocket.on('vote', (updatedStore) => {
       setStore(updatedStore);
     });
@@ -46,9 +48,10 @@ export const MainPage = () => {
     return () => {
       newSocket.disconnect();
     };
-  }, [setStore]);
+  }, [setStore, userObj]);
 
   useEffect(() => {
+    console.log('third useEffect running')
     const newSocket = io(ENDPOINT, {
       transports: ['websocket'],
     });
@@ -70,7 +73,7 @@ export const MainPage = () => {
     newSocket.disconnect();
   }
 
-  const mySocketInfo = store.find(u => u.username === username);
+  const mySocketInfo = store.find(u => u.userId === userId);
   const vote = mySocketInfo && mySocketInfo.vote;
 
   return (

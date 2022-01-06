@@ -12,23 +12,23 @@ app.get("/", (req, res) => {
 
 const users = [];
 
-const formatUserValues = user => ({
-  username: user,
-  vote: null,
-})
+// const formatUserValues = user => ({
+//   username: user,
+//   vote: null,
+// })
 
 io.on("connection", (socket) => {
   console.log("a user connected");
 
   socket.on('username', u => {
-    if (!users.find(user => user.username === u)) {
-      users.push(formatUserValues(u))
+    if (!users.find(user => user.userId === u.userId)) {
+      users.push(u);
     }
     io.emit('users', users);
   })
 
   socket.on('vote', (obj) => {
-    const userIndex = users.findIndex(user => user.username === obj.username);
+    const userIndex = users.findIndex(user => user.userId === obj.userId);
     if (userIndex !== -1) {
       users[userIndex].vote = obj.vote;
     } else {

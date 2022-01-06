@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import { UserContext } from '../context/UserContext';
 
 export const Card = ({ value, socket, disabled, selected }) => {
-  const { username } = useContext(UserContext);
+  const { userObj } = useContext(UserContext);
   const [isSelected, setIsSelected] = useState(false);
 
   useEffect(() => {
@@ -11,14 +11,13 @@ export const Card = ({ value, socket, disabled, selected }) => {
 
   const emitValue = (value) => {
 	if(selected) {
-		socket.emit('vote', {
-			username: username,
-			vote: null,
-		});
+		socket.emit('vote', {...userObj, ...{vote: null}});
 	} else {
 		socket.emit('vote', {
-			username: username,
-			vote: value
+			...userObj,
+			...{
+				vote: value
+			}
 		});
 	}
 	setIsSelected(!isSelected);

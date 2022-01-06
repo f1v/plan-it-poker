@@ -1,9 +1,12 @@
 import React, { useContext, useState } from 'react';
 import { UserContext } from '../../context/UserContext';
+import {
+  v4 as uuidv4
+} from 'uuid';
 import './Login.scss';
 
 export const LoginForm = () => {
-  const { setUsername } = useContext(UserContext);
+  const { setUsername, setUserId } = useContext(UserContext);
   const [name, setName] = useState();
 
   return (
@@ -23,8 +26,11 @@ export const LoginForm = () => {
           type='submit'
           onClick={(e) => {
             e.preventDefault();
+            const userId = uuidv4();
             setUsername(name);
-            localStorage.setItem("pokerName", name)
+            setUserId(userId);
+            localStorage.setItem("pokerName", name);
+            localStorage.setItem("userId", userId);
           }}
         >
           Login
