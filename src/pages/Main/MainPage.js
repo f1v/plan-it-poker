@@ -13,21 +13,24 @@ export const MainPage = () => {
   const [store, setStore] = useState([]);
   const { id } = useParams();
   const ENDPOINT = process.env.REACT_APP_ENDPOINT
-    ? `${process.env.REACT_APP_ENDPOINT}` 
-    : `http://localhost:4000`;
-    console.log(ENDPOINT);
+    ? `${process.env.REACT_APP_ENDPOINT}`
+    : 'http://localhost:4000';
+  const updatedUser = {
+    ...userObj,
+    room: id,
+  };
 
   useEffect(() => {
     console.log('first useEffect running');
     const newSocket = io(ENDPOINT, {
       query: {
-        id: id
+        id: id,
       },
       transports: ['websocket'],
     });
 
     setSocket(newSocket);
-    newSocket.emit('username', userObj);
+    newSocket.emit('username', updatedUser);
 
     return () => {
       newSocket.disconnect();
@@ -38,11 +41,11 @@ export const MainPage = () => {
     console.log('second useEffect running');
     const newSocket = io(ENDPOINT, {
       query: {
-        id: id
+        id: id,
       },
       transports: ['websocket'],
     });
-    newSocket.emit('username', userObj);
+    newSocket.emit('username', updatedUser);
     newSocket.on('vote', (updatedStore) => {
       setStore(updatedStore);
       setStoreContext(updatedStore);
@@ -77,7 +80,7 @@ export const MainPage = () => {
       query: {
         id: id,
       },
-      transports: ["websocket"],
+      transports: ['websocket'],
     });
 
     newSocket.emit('cards flipped', cardsFlipped);
@@ -93,7 +96,7 @@ export const MainPage = () => {
       query: {
         id: id,
       },
-      transports: ["websocket"],
+      transports: ['websocket'],
     });
 
     newSocket.emit('cardValues', cardValues);
@@ -108,7 +111,7 @@ export const MainPage = () => {
       query: {
         id: id,
       },
-      transports: ["websocket"],
+      transports: ['websocket'],
     });
 
     socket.emit('reset');

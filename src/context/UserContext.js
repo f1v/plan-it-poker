@@ -16,7 +16,6 @@ export const UserProvider = ({ children }) => {
       username: username,
       vote: vote || null,
       userId: userId,
-      room: undefined,
     };
     setUserObj(newUserObj);
   }, [username, vote, userId]);
