@@ -23,7 +23,7 @@ export const MainPage = () => {
     return () => {
       newSocket.disconnect();
     };
-  }, [userObj])
+  }, [userObj, ENDPOINT])
 
   useEffect(() => {
     console.log('second useEffect running')
@@ -48,7 +48,7 @@ export const MainPage = () => {
     return () => {
       newSocket.disconnect();
     };
-  }, [setStore, userObj]);
+  }, [setStore, userObj, ENDPOINT]);
 
   useEffect(() => {
     console.log('third useEffect running')
@@ -61,7 +61,7 @@ export const MainPage = () => {
     return () => {
       newSocket.disconnect();
     };
-  }, [cardsFlipped])
+  }, [cardsFlipped, ENDPOINT])
 
   const resetVoting = () => {
     const newSocket = io(ENDPOINT, {
