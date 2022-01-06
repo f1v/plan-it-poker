@@ -1,5 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { UserContext } from '../context/UserContext';
+import './Card.scss';
 
 export const Card = ({ value, socket, disabled, selected }) => {
   const { userObj } = useContext(UserContext);
@@ -25,10 +26,12 @@ export const Card = ({ value, socket, disabled, selected }) => {
 
   return (
     <div
-      onClick={disabled ? () => {} : () => emitValue(value)}
-      style={{ border: '1px solid black', height: '200px', width: '200px', backgroundColor: selected ? 'blue' : disabled ? 'grey' : 'white' }}
+      onClick={disabled ? () => { } : () => emitValue(value)}
+      className={`card-edge color-${selected ? 'selected' : disabled ? 'disabled' : 'default'}`}
     >
-      {value}
+      <div className='card-top'>{value}</div>
+      <div className='card-center'>{value}</div>
+      <div className='card-bottom'>{value}</div>
     </div>
   );
 };
