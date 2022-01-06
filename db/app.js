@@ -1,13 +1,38 @@
+// imports
 const express = require("express");
+const { query, Client } = require("faunadb");
+const { Server } = require("socket.io");
+const { createServer } = require("http");
+const env = require("dotenv").config();
+
+// variables
 const app = express();
 const port = 4000;
-const http = require("http");
-const server = http.createServer(app);
-const { Server } = require("socket.io");
+const server = createServer(app);
 const io = new Server(server);
+const { Create, Collection } = query;
 
-app.get("/", (req, res) => {
+// Secret
+const secret = process.env.FAUNA_ADMIN_KEY;
+
+// Client
+const client = new Client({
+  secret: secret,
+  domain: "db.us.fauna.com",
+});
+
+app.get("/", async (req, res) => {
   res.sendFile(__dirname + "/index.html");
+  try {
+    const createP = await client.query(
+      Create(Collection("Users"), {
+        data: { username: "testValue", password: "otherTestValue" },
+      })
+    );
+    console.log(createP);
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 const users = [];
@@ -24,8 +49,8 @@ io.on("connection", (socket) => {
     if (!users.find(user => user.userId === u.userId)) {
       users.push(u);
     }
-    io.emit('users', users);
-  })
+    io.emit("users", users);
+  });
 
   socket.on('vote', (obj) => {
     const userIndex = users.findIndex(user => user.userId === obj.userId);
@@ -34,19 +59,19 @@ io.on("connection", (socket) => {
     } else {
       users.push(obj);
     }
-    console.log('users', users);
-    io.emit('vote', users);
+    console.log("users", users);
+    io.emit("vote", users);
   });
 
-  socket.on('cards flipped', (msg) => {
-    io.emit('cards flipped', msg);
+  socket.on("cards flipped", (msg) => {
+    io.emit("cards flipped", msg);
   });
 
-  socket.on('reset', () => {
-    users.forEach(u => u.vote = null)
-    io.emit('reset', users);
-    io.emit('cards flipped', false)
-  })
+  socket.on("reset", () => {
+    users.forEach((u) => (u.vote = null));
+    io.emit("reset", users);
+    io.emit("cards flipped", false);
+  });
 
   socket.on("disconnect", () => {
     console.log("user disconnected");
