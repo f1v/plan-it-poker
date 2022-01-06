@@ -8,6 +8,7 @@ export const MainPage = () => {
   const { userObj, userId } = useContext(UserContext);
   const [socket, setSocket] = useState(null);
   const [cardsFlipped, setCardsFlipped] = useState(false);
+  const [cardValues, setCardValues] = useState([1,2,3,4,5,6,7]);
   const [store, setStore] = useState([]);
   const ENDPOINT = process.env.REACT_APP_ENDPOINT ? `${process.env.REACT_APP_ENDPOINT}` : 'http://localhost:4000';
 
@@ -45,13 +46,17 @@ export const MainPage = () => {
       setCardsFlipped(msg);
     })
 
+    newSocket.on('cardValues', (values) => {
+      setCardValues(values);
+    })
+
     return () => {
       newSocket.disconnect();
     };
   }, [setStore, userObj, ENDPOINT]);
 
   useEffect(() => {
-    console.log('third useEffect running')
+    console.log('third useEffect running');
     const newSocket = io(ENDPOINT, {
       transports: ['websocket'],
     });
@@ -62,6 +67,19 @@ export const MainPage = () => {
       newSocket.disconnect();
     };
   }, [cardsFlipped, ENDPOINT])
+
+  useEffect(() => {
+    console.log('Fourth useEffect running');
+    const newSocket = io(ENDPOINT, {
+      transports: ['websocket'],
+    });
+
+    newSocket.emit('cardValues', cardValues);
+
+    return () => {
+      newSocket.disconnect();
+    };
+  }, [cardValues, ENDPOINT])
 
   const resetVoting = () => {
     const newSocket = io(ENDPOINT, {
@@ -76,6 +94,18 @@ export const MainPage = () => {
   const mySocketInfo = store.find(u => u.userId === userId);
   const vote = mySocketInfo && mySocketInfo.vote;
 
+  const updateCardValues = (options) => {
+    const values = []
+    const fib = (n) => n <= 1 ? 1 : fib(n - 1) + fib(n - 2)
+
+    for (let i = 1; i <= options.numberOfCards; i++){
+      values.push(options.sequence === 'fib' ? fib(i) : i)
+    }
+
+    options.includeCoffee && values.push('coffee')
+    setCardValues(values)
+  }
+
   return (
     <Fragment>
       <h4>Welcome to Plan-It Poker!</h4>
@@ -87,14 +117,15 @@ export const MainPage = () => {
             padding: '10px',
           }}
         >
-          <VotingHub vote={vote} socket={socket} cardsFlipped={cardsFlipped} votes={store.map(u => u.vote)} />
+          <VotingHub vote={vote} cardValues={cardValues} socket={socket} cardsFlipped={cardsFlipped} votes={store.map(u => u.vote)} />
           <div>
             <UserHub
           store={store}
           cardsFlipped={cardsFlipped}
           socket={socket}
           />
-          <button disabled={!store.map(u => u.vote).some(el => el !== null)} style={{width: '100%', marginTop: '50px', height: '50px'}} onClick={() => {setCardsFlipped(!cardsFlipped)}}>Flip Cards</button>
+          <button disabled={!store.map(u => u.vote).some(el => el !== null)} style={{ width: '100%', marginTop: '50px', height: '50px' }} onClick={() => { setCardsFlipped(!cardsFlipped); }}>Flip Cards</button>
+          <button style={{ width: '100%', marginTop: '50px', height: '50px' }} onClick={(e) => { updateCardValues({numberOfCards:5, sequence: 'fib', includeCoffee: true}); }}>Set card Values</button>
           {cardsFlipped && <button style={{width: '100%', marginTop: '50px', height: '50px'}} onClick={resetVoting}>Reset</button>}
           </div>
         </div>
