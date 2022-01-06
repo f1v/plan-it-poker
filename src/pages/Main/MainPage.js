@@ -60,7 +60,7 @@ export const MainPage = () => {
     return () => {
       newSocket.disconnect();
     };
-  }, [setStore, userObj, ENDPOINT]);
+  }, [setStore, userObj, ENDPOINT, setStoreContext]);
 
   useEffect(() => {
     console.log('third useEffect running');
