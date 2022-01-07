@@ -2,11 +2,14 @@ import React, { Fragment, useEffect, useState, useContext } from 'react';
 import { UserContext } from '../../context/UserContext';
 import { UserHub } from '../../components/User/UserHub';
 import { VotingHub } from '../../components/VotingHub';
+import { LoginModal } from '../Login/LoginPage';
 import io from 'socket.io-client';
 import { useParams } from 'react-router-dom';
 
 export const MainPage = () => {
-  const { userObj, userId, setStoreContext } = useContext(UserContext);
+  const { loggedIn, userObj, userId, setStoreContext } = useContext(
+    UserContext
+  );
   const [socket, setSocket] = useState(null);
   const [cardsFlipped, setCardsFlipped] = useState(false);
   const [cardValues, setCardValues] = useState([1, 2, 3, 4, 5, 6, 7]);
@@ -136,6 +139,7 @@ export const MainPage = () => {
 
   return (
     <Fragment>
+      <LoginModal show={!loggedIn} />
       <h4>Welcome to Plan-It Poker!</h4>
       {socket ? (
         <div
