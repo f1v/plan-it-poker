@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 
 const CardOptionForm = ({closeModal, updateBoard}) => {
   const [numberOfCards, setNumberOfCards] = useState(6);
-  const [selectedSequence, setSelectedSequence] = useState('');
+  const [sequence, setSequence] = useState('');
   const [includeCoffee, setIncludeCoffee] = useState(false)
   return (
     <form type="submit">
@@ -26,8 +26,8 @@ const CardOptionForm = ({closeModal, updateBoard}) => {
             id="sequencial"
             name="sequence"
             value={"seq"}
-            checked={selectedSequence === "seq"}
-            onChange={(e) => { setSelectedSequence(e.target.value); }}
+            checked={sequence === "seq"}
+            onChange={(e) => { setSequence(e.target.value); }}
           />
         </div>
         <div>
@@ -37,8 +37,8 @@ const CardOptionForm = ({closeModal, updateBoard}) => {
             id="fibonacci"
             name="sequence"
             value={"fib"}
-            checked={selectedSequence === "fib"}
-            onChange={(e) => { setSelectedSequence(e.target.value); }}
+            checked={sequence === "fib"}
+            onChange={(e) => { setSequence(e.target.value); }}
           />
         </div>
         <div>
@@ -48,8 +48,8 @@ const CardOptionForm = ({closeModal, updateBoard}) => {
             id="square"
             name="sequence"
             value={"squ"}
-            checked={selectedSequence === "squ"}
-            onChange={(e) => { setSelectedSequence(e.target.value); }}
+            checked={sequence === "squ"}
+            onChange={(e) => { setSequence(e.target.value); }}
           />
         </div>
         <div>
@@ -59,8 +59,8 @@ const CardOptionForm = ({closeModal, updateBoard}) => {
             id="cubed"
             name="sequence"
             value={"cub"}
-            checked={selectedSequence === "cub"}
-            onChange={(e) => { setSelectedSequence(e.target.value); }}
+            checked={sequence === "cub"}
+            onChange={(e) => { setSequence(e.target.value); }}
           />
         </div>
         <div>
@@ -70,8 +70,8 @@ const CardOptionForm = ({closeModal, updateBoard}) => {
             id="binanry"
             name="sequence"
             value={"bin"}
-            checked={selectedSequence === "bin"}
-            onChange={(e) => { setSelectedSequence(e.target.value); }}
+            checked={sequence === "bin"}
+            onChange={(e) => { setSequence(e.target.value); }}
           />
         </div>
         <div>
@@ -109,7 +109,7 @@ const CardOptionForm = ({closeModal, updateBoard}) => {
           e.preventDefault();
           updateBoard({
             numberOfCards,
-            sequence: selectedSequence,
+            sequence,
             includeCoffee
           })
 
