@@ -168,18 +168,18 @@ export const MainPage = () => {
     <div className='background'>
       <LoginModal show={!loggedIn} />
       <h4 className='header'>Solar System Poker</h4>
-      {/* <div
+      <div
         style={{
           display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'space-around',
-          alignItems: 'baseline',
+          flexDirection: 'column',
+          alignContent: 'flex-end',
+          flexWrap: 'wrap',
+          padding: 10,
         }}
       >
-        <h4>Welcome to Plan-It Poker!</h4>
         <UserProfile socket={socket} onClose={onClose} show={show} />
         <button onClick={() => setShow(true)}>Edit Profile</button>
-      </div> */}
+      </div>
       {socket ? (
         <div className='container'>
           <VotingHub

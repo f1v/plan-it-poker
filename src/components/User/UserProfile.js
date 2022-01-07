@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 import { UserContext } from '../../context/UserContext';
 import 'react-responsive-modal/styles.css';
 import { Modal } from 'react-responsive-modal';
+import './User.scss';
 
 export const UserProfile = ({ show, onClose, socket }) => {
   const { setUsername, setUserId, username, userObj, vote } = useContext(
@@ -14,7 +15,9 @@ export const UserProfile = ({ show, onClose, socket }) => {
       <div className='Login'>
         <div className='login-form'>
           <div>
-            <h4 style={{ textAlign: 'center' }}>Update Username</h4>
+            <h4 style={{ textAlign: 'center', marginTop: 40 }}>
+              Update Username
+            </h4>
             <input
               autoFocus
               type='text'
@@ -24,6 +27,7 @@ export const UserProfile = ({ show, onClose, socket }) => {
           </div>
 
           <button
+            style={{ margin: 10 }}
             type='submit'
             onClick={(e) => {
               e.preventDefault();
