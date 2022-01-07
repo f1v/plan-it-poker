@@ -1,4 +1,3 @@
-import { update } from 'lodash';
 import React, { useState } from 'react';
 
 const CardOptionForm = ({closeModal, updateBoard}) => {
