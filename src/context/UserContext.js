@@ -33,6 +33,7 @@ export const UserProvider = ({ children }) => {
         setUserId,
         setUsername,
         setStoreContext,
+        setUserObj,
         setVote,
       }}
     >

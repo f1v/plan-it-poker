@@ -1,24 +1,35 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { UserContext } from '../../context/UserContext';
+import { UserProfile } from '../../components/User/UserProfile';
 import { UserHub } from '../../components/User/UserHub';
 import { VotingHub } from '../../components/VotingHub';
 import { LoginModal } from '../Login/LoginPage';
 import io from 'socket.io-client';
 import { useParams } from 'react-router-dom';
-import { Modal } from '../../components/Modal'
-import CardOptionForm from '../../components/Card/CardOptionForm'
+import { Modal } from '../../components/Modal';
+import CardOptionForm from '../../components/Card/CardOptionForm';
 import './MainPage.css';
 
 export const MainPage = () => {
   const { loggedIn, userObj, userId, setStoreContext } = useContext(
     UserContext
   );
+  const [show, setShow] = useState(false);
   const [socket, setSocket] = useState(null);
   const [cardsFlipped, setCardsFlipped] = useState(false);
-  const [cardValues, setCardValues] = useState([1, 2, 3, 5, 8, 13, 21, 'coffee']);
+  const [cardValues, setCardValues] = useState([
+    1,
+    2,
+    3,
+    5,
+    8,
+    13,
+    21,
+    'coffee',
+  ]);
   const [store, setStore] = useState([]);
   const { id } = useParams();
-  const [showCardOptions, showModal] = useState(false)
+  const [showCardOptions, showModal] = useState(false);
 
   const ENDPOINT = process.env.REACT_APP_ENDPOINT
     ? `${process.env.REACT_APP_ENDPOINT}`
@@ -134,12 +145,12 @@ export const MainPage = () => {
 
   const updateCardValues = (options) => {
     const values = [];
-    const fib = n => n <= 1 ? 1 : fib(n - 1) + fib(n - 2);
-    const seq = n => n;
-    const bin = n => n.toString(2);
-    const squ = n => n * n;
-    const cub = n => n ** n;
-    const sequences = { fib, seq, bin, squ, cub }
+    const fib = (n) => (n <= 1 ? 1 : fib(n - 1) + fib(n - 2));
+    const seq = (n) => n;
+    const bin = (n) => n.toString(2);
+    const squ = (n) => n * n;
+    const cub = (n) => n ** n;
+    const sequences = { fib, seq, bin, squ, cub };
 
     for (let i = 1; i <= options.numberOfCards; i++) {
       values.push(sequences[options.sequence](i));
@@ -149,10 +160,26 @@ export const MainPage = () => {
     setCardValues(values);
   };
 
+  const onClose = () => {
+    setShow(false);
+  };
+
   return (
     <div className='background'>
       <LoginModal show={!loggedIn} />
       <h4 className='header'>Solar System Poker</h4>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignContent: 'flex-end',
+          flexWrap: 'wrap',
+          padding: 10,
+        }}
+      >
+        <UserProfile socket={socket} onClose={onClose} show={show} />
+        <button onClick={() => setShow(true)}>Edit Profile</button>
+      </div>
       {socket ? (
         <div className='container'>
           <VotingHub
@@ -179,7 +206,7 @@ export const MainPage = () => {
             <button
               style={{ width: '100%', marginTop: '50px', height: '50px' }}
               onClick={() => {
-                showModal(true)
+                showModal(true);
               }}
             >
               Open Board Options
@@ -199,7 +226,10 @@ export const MainPage = () => {
       )}
 
       <Modal show={showCardOptions} handleClose={() => showModal(false)}>
-        <CardOptionForm updateBoard={updateCardValues} closeModal={() => showModal(false)}/>
+        <CardOptionForm
+          updateBoard={updateCardValues}
+          closeModal={() => showModal(false)}
+        />
       </Modal>
     </div>
   );
