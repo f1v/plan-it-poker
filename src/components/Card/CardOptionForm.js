@@ -18,7 +18,7 @@ const CardOptionForm = ({closeModal, updateBoard}) => {
           />
         </div>
         <div>
-          <p>What sequence would you like?</p>
+          <p>What sequence would you like? (required)</p>
           <label>Sequencial</label>
           <input
             type='radio'
@@ -106,7 +106,7 @@ const CardOptionForm = ({closeModal, updateBoard}) => {
         type='submit'
         onClick={(e) => {
           e.preventDefault();
-          updateBoard({
+          sequence && updateBoard({
             numberOfCards,
             sequence,
             includeCoffee
