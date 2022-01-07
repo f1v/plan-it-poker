@@ -2,38 +2,54 @@ import React, { Fragment, useEffect, useState, useContext } from 'react';
 import { UserContext } from '../../context/UserContext';
 import { UserHub } from '../../components/User/UserHub';
 import { VotingHub } from '../../components/VotingHub';
+import { LoginModal } from '../Login/LoginPage';
 import io from 'socket.io-client';
+import { useParams } from 'react-router-dom';
 
 export const MainPage = () => {
-  const { userObj, userId, setStoreContext } = useContext(UserContext);
+  const { loggedIn, userObj, userId, setStoreContext } = useContext(
+    UserContext
+  );
   const [socket, setSocket] = useState(null);
   const [cardsFlipped, setCardsFlipped] = useState(false);
   const [cardValues, setCardValues] = useState([1, 2, 3, 4, 5, 6, 7]);
   const [store, setStore] = useState([]);
+  const { id } = useParams();
   const ENDPOINT = process.env.REACT_APP_ENDPOINT
     ? `${process.env.REACT_APP_ENDPOINT}`
     : 'http://localhost:4000';
+  const updatedUser = {
+    ...userObj,
+    room: id,
+  };
 
   useEffect(() => {
     console.log('first useEffect running');
     const newSocket = io(ENDPOINT, {
+      query: {
+        id: id,
+      },
       transports: ['websocket'],
     });
 
     setSocket(newSocket);
-    newSocket.emit('username', userObj);
+    newSocket.emit('username', updatedUser);
 
     return () => {
       newSocket.disconnect();
     };
-  }, [userObj, ENDPOINT]);
+    // eslint-disable-next-line
+  }, [id, userObj, ENDPOINT]);
 
   useEffect(() => {
     console.log('second useEffect running');
     const newSocket = io(ENDPOINT, {
+      query: {
+        id: id,
+      },
       transports: ['websocket'],
     });
-    newSocket.emit('username', userObj);
+    newSocket.emit('username', updatedUser);
     newSocket.on('vote', (updatedStore) => {
       setStore(updatedStore);
       setStoreContext(updatedStore);
@@ -60,11 +76,15 @@ export const MainPage = () => {
     return () => {
       newSocket.disconnect();
     };
-  }, [setStore, userObj, ENDPOINT, setStoreContext]);
+    // eslint-disable-next-line
+  }, [id, setStore, userObj, ENDPOINT, setStoreContext]);
 
   useEffect(() => {
     console.log('third useEffect running');
     const newSocket = io(ENDPOINT, {
+      query: {
+        id: id,
+      },
       transports: ['websocket'],
     });
 
@@ -73,11 +93,14 @@ export const MainPage = () => {
     return () => {
       newSocket.disconnect();
     };
-  }, [cardsFlipped, ENDPOINT]);
+  }, [id, cardsFlipped, ENDPOINT]);
 
   useEffect(() => {
     console.log('Fourth useEffect running');
     const newSocket = io(ENDPOINT, {
+      query: {
+        id: id,
+      },
       transports: ['websocket'],
     });
 
@@ -86,10 +109,13 @@ export const MainPage = () => {
     return () => {
       newSocket.disconnect();
     };
-  }, [cardValues, ENDPOINT]);
+  }, [id, cardValues, ENDPOINT]);
 
   const resetVoting = () => {
     const newSocket = io(ENDPOINT, {
+      query: {
+        id: id,
+      },
       transports: ['websocket'],
     });
 
@@ -115,6 +141,7 @@ export const MainPage = () => {
 
   return (
     <Fragment>
+      <LoginModal show={!loggedIn} />
       <h4>Welcome to Plan-It Poker!</h4>
       {socket ? (
         <div
