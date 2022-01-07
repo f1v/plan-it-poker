@@ -37,7 +37,7 @@ export const UserHub = ({ message, store, socket, cardsFlipped }) => {
   );
 
   return (
-    <div style={{ paddingLeft: '20vw' }}>
+    <div>
       {displayMessage()}
       <div
         style={{

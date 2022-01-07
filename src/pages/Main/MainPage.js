@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { UserContext } from '../../context/UserContext';
 import { UserHub } from '../../components/User/UserHub';
 import { VotingHub } from '../../components/VotingHub';
@@ -7,6 +7,7 @@ import io from 'socket.io-client';
 import { useParams } from 'react-router-dom';
 import { Modal } from '../../components/Modal'
 import CardOptionForm from '../../components/Card/CardOptionForm'
+import './MainPage.css';
 
 export const MainPage = () => {
   const { loggedIn, userObj, userId, setStoreContext } = useContext(
@@ -149,17 +150,11 @@ export const MainPage = () => {
   };
 
   return (
-    <Fragment>
+    <div className='background'>
       <LoginModal show={!loggedIn} />
-      <h4>Welcome to Plan-It Poker!</h4>
+      <h4 className='header'>Solar System Poker</h4>
       {socket ? (
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            padding: '10px',
-          }}
-        >
+        <div className='container'>
           <VotingHub
             vote={vote}
             cardValues={cardValues}
@@ -206,6 +201,6 @@ export const MainPage = () => {
       <Modal show={showCardOptions} handleClose={() => showModal(false)}>
         <CardOptionForm updateBoard={updateCardValues} closeModal={() => showModal(false)}/>
       </Modal>
-    </Fragment>
+    </div>
   );
 };

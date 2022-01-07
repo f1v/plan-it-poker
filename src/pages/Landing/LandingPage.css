@@ -1,0 +1,25 @@
+.background {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  background-image: linear-gradient(rgb(219, 156, 36), rgb(254, 84, 42));
+  height: 100vh;
+}
+
+.button {
+  height: 40px;
+  max-width: 140px;
+  align-self: center;
+  background-color: #fcfaeb;
+}
+
+.button:hover {
+  background-color: rgb(252, 225, 191);
+  transition: background-color 200ms ease;
+  cursor: pointer;
+}
+
+.header {
+  color: #fcfaeb;
+  font-family: Roboto;
+}
