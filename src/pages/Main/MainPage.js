@@ -5,6 +5,8 @@ import { VotingHub } from '../../components/VotingHub';
 import { LoginModal } from '../Login/LoginPage';
 import io from 'socket.io-client';
 import { useParams } from 'react-router-dom';
+import { Modal } from '../../components/Modal'
+import CardOptionForm from '../../components/Card/CardOptionForm'
 
 export const MainPage = () => {
   const { loggedIn, userObj, userId, setStoreContext } = useContext(
@@ -12,9 +14,11 @@ export const MainPage = () => {
   );
   const [socket, setSocket] = useState(null);
   const [cardsFlipped, setCardsFlipped] = useState(false);
-  const [cardValues, setCardValues] = useState([1, 2, 3, 4, 5, 6, 7]);
+  const [cardValues, setCardValues] = useState([1, 2, 3, 5, 8, 13, 21, 'coffee']);
   const [store, setStore] = useState([]);
   const { id } = useParams();
+  const [showCardOptions, showModal] = useState(false)
+
   const ENDPOINT = process.env.REACT_APP_ENDPOINT
     ? `${process.env.REACT_APP_ENDPOINT}`
     : 'http://localhost:4000';
@@ -129,10 +133,15 @@ export const MainPage = () => {
 
   const updateCardValues = (options) => {
     const values = [];
-    const fib = (n) => (n <= 1 ? 1 : fib(n - 1) + fib(n - 2));
+    const fib = n => n <= 1 ? 1 : fib(n - 1) + fib(n - 2);
+    const seq = n => n;
+    const bin = n => n.toString(2);
+    const squ = n => n * n;
+    const cub = n => n ** n;
+    const sequences = { fib, seq, bin, squ, cub }
 
     for (let i = 1; i <= options.numberOfCards; i++) {
-      values.push(options.sequence === 'fib' ? fib(i) : i);
+      values.push(sequences[options.sequence](i));
     }
 
     options.includeCoffee && values.push('coffee');
@@ -174,15 +183,11 @@ export const MainPage = () => {
             </button>
             <button
               style={{ width: '100%', marginTop: '50px', height: '50px' }}
-              onClick={(e) => {
-                updateCardValues({
-                  numberOfCards: 5,
-                  sequence: 'fib',
-                  includeCoffee: true,
-                });
+              onClick={() => {
+                showModal(true)
               }}
             >
-              Set card Values
+              Open Board Options
             </button>
             {cardsFlipped && (
               <button
@@ -197,6 +202,10 @@ export const MainPage = () => {
       ) : (
         []
       )}
+
+      <Modal show={showCardOptions} handleClose={() => showModal(false)}>
+        <CardOptionForm updateBoard={updateCardValues} closeModal={() => showModal(false)}/>
+      </Modal>
     </Fragment>
   );
 };
