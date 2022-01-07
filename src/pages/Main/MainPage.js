@@ -15,7 +15,7 @@ export const MainPage = () => {
   );
   const [socket, setSocket] = useState(null);
   const [cardsFlipped, setCardsFlipped] = useState(false);
-  const [cardValues, setCardValues] = useState([1, 2, 3, 5, 8, 13, 21, 'coffee']);
+  const [cardValues, setCardValues] = useState(JSON.stringify([1, 2, 3, 5, 8, 13, 21, 'coffee']));
   const [store, setStore] = useState([]);
   const { id } = useParams();
   const [showCardOptions, showModal] = useState(false)
@@ -75,7 +75,7 @@ export const MainPage = () => {
     });
 
     newSocket.on('cardValues', (values) => {
-      setCardValues(values);
+      setCardValues(JSON.stringify(values));
     });
 
     return () => {
@@ -109,7 +109,7 @@ export const MainPage = () => {
       transports: ['websocket'],
     });
 
-    newSocket.emit('cardValues', cardValues);
+    newSocket.emit('cardValues', JSON.parse(cardValues));
 
     return () => {
       newSocket.disconnect();
@@ -146,7 +146,7 @@ export const MainPage = () => {
     }
 
     options.includeCoffee && values.push('coffee');
-    setCardValues(values);
+    setCardValues(JSON.stringify(values));
   };
 
   return (
@@ -157,7 +157,7 @@ export const MainPage = () => {
         <div className='container'>
           <VotingHub
             vote={vote}
-            cardValues={cardValues}
+            cardValues={JSON.parse(cardValues)}
             socket={socket}
             cardsFlipped={cardsFlipped}
           />
