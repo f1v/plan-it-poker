@@ -14,7 +14,7 @@ export const MainPage = () => {
   );
   const [socket, setSocket] = useState(null);
   const [cardsFlipped, setCardsFlipped] = useState(false);
-  const [cardValues, setCardValues] = useState([1,2,3,5,8,13,21]);
+  const [cardValues, setCardValues] = useState([1, 2, 3, 5, 8, 13, 21, 'coffee']);
   const [store, setStore] = useState([]);
   const { id } = useParams();
   const [showCardOptions, showModal] = useState(false)
