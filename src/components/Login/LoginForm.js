@@ -8,35 +8,37 @@ export const LoginForm = () => {
   const [name, setName] = useState();
 
   return (
-    <div className='Login'>
-      <div className='login-form'>
-        <div>
-          <h4 style={{ textAlign: 'center' }}>Please Login</h4>
-          <label>
-            Username:
-            <input
-              autoFocus
-              type='text'
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-          </label>
-        </div>
+    <form>
+      <div className='Login'>
+        <div className='login-form'>
+          <div>
+            <h4 style={{ textAlign: 'center' }}>Please Login</h4>
+            <label>
+              Username:
+              <input
+                autoFocus
+                type='text'
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </label>
+          </div>
 
-        <button
-          type='submit'
-          onClick={(e) => {
-            e.preventDefault();
-            const userId = uuidv4();
-            setUsername(name);
-            setUserId(userId);
-            localStorage.setItem('pokerName', name);
-            localStorage.setItem('userId', userId);
-          }}
-        >
-          Login
-        </button>
+          <button
+            type='submit'
+            onClick={(e) => {
+              e.preventDefault();
+              const userId = uuidv4();
+              setUsername(name);
+              setUserId(userId);
+              localStorage.setItem('pokerName', name);
+              localStorage.setItem('userId', userId);
+            }}
+          >
+            Login
+          </button>
+        </div>
       </div>
-    </div>
+    </form>
   );
 };
