@@ -38,6 +38,7 @@ export const MainPage = () => {
     return () => {
       newSocket.disconnect();
     };
+    // eslint-disable-next-line
   }, [id, userObj, ENDPOINT]);
 
   useEffect(() => {
@@ -75,6 +76,7 @@ export const MainPage = () => {
     return () => {
       newSocket.disconnect();
     };
+    // eslint-disable-next-line
   }, [id, setStore, userObj, ENDPOINT, setStoreContext]);
 
   useEffect(() => {
