@@ -7,33 +7,38 @@ export const UserProvider = ({ children }) => {
   const [username, setUsername] = useState(
     localStorage.getItem('pokerName') || ''
   );
-  const [vote, setVote] = useState(0);
+  const [vote, setVote] = useState(null);
   const [userObj, setUserObj] = useState({});
-  const [storeContext, setStoreContext] = useState({});
+  const [votingRole, setVotingRole] = useState(true);
+  const [adminRole, setAdminRole] = useState(localStorage.getItem("adminRole") || '');
 
   useEffect(() => {
     const newUserObj = {
       username: username,
       vote: vote || null,
       userId: userId,
-    };
+      votingRole: votingRole,
+      adminRole: adminRole,
+    }
     setUserObj(newUserObj);
-  }, [username, vote, userId]);
+  }, [username, vote, userId, adminRole, votingRole])
 
   return (
     <UserContext.Provider
       value={{
-        finishedVoting: !!vote,
         loggedIn: !!username,
         username,
         userId,
+        votingRole,
+        adminRole,
         userObj,
         vote,
-        storeContext,
         setUserId,
         setUsername,
-        setStoreContext,
         setVote,
+        setVotingRole,
+        setAdminRole,
+        setUserObj
       }}
     >
       {children}

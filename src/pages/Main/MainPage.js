@@ -1,21 +1,17 @@
 import React, { Fragment, useEffect, useState, useContext } from 'react';
 import { UserContext } from '../../context/UserContext';
+import { RoomContext } from '../../context/RoomContext';
 import { UserHub } from '../../components/User/UserHub';
 import { VotingHub } from '../../components/VotingHub';
 import io from 'socket.io-client';
 
 export const MainPage = () => {
-  const { userObj, userId, setStoreContext } = useContext(UserContext);
-  const [socket, setSocket] = useState(null);
-  const [cardsFlipped, setCardsFlipped] = useState(false);
-  const [cardValues, setCardValues] = useState([1, 2, 3, 4, 5, 6, 7]);
-  const [store, setStore] = useState([]);
-  const ENDPOINT = process.env.REACT_APP_ENDPOINT
-    ? `${process.env.REACT_APP_ENDPOINT}`
-    : 'http://localhost:4000';
+  const { userObj, setUserObj } = useContext(UserContext);
+  const {socket, setSocket, cardsFlipped, setCardsFlipped, cardValues, setCardValues, users, setUsers, ENDPOINT} = useContext(RoomContext);
+
+  const findMyUser = u => u.find(u => u.userId === userObj.userId);
 
   useEffect(() => {
-    console.log('first useEffect running');
     const newSocket = io(ENDPOINT, {
       transports: ['websocket'],
     });
@@ -26,28 +22,31 @@ export const MainPage = () => {
     return () => {
       newSocket.disconnect();
     };
-  }, [userObj, ENDPOINT]);
+  }, [userObj, ENDPOINT, setSocket]);
 
   useEffect(() => {
-    console.log('second useEffect running');
     const newSocket = io(ENDPOINT, {
       transports: ['websocket'],
     });
-    newSocket.emit('username', userObj);
-    newSocket.on('vote', (updatedStore) => {
-      setStore(updatedStore);
-      setStoreContext(updatedStore);
-    });
 
     newSocket.on('users', (u) => {
-      setStore(u);
-      setStoreContext(u);
+      setUsers(u);
+      const user = findMyUser(u);
+      setUserObj(user);
     });
 
     newSocket.on('reset', (u) => {
-      setStore(u);
-      setStoreContext(u);
+      setUsers(u);
+      const user = findMyUser(u);
+      setUserObj(user);
+      setCardsFlipped(false);
     });
+
+    // newSocket.on('votingRole', u => {
+    //   setUsers(u);
+    //   const user = findMyUser(u);
+    //   setUserObj(user);
+    // })
 
     newSocket.on('cards flipped', (msg) => {
       setCardsFlipped(msg);
@@ -60,10 +59,9 @@ export const MainPage = () => {
     return () => {
       newSocket.disconnect();
     };
-  }, [setStore, userObj, ENDPOINT, setStoreContext]);
+  }, [setUsers, userObj, ENDPOINT, setCardsFlipped, setCardValues, findMyUser, setUserObj]);
 
   useEffect(() => {
-    console.log('third useEffect running');
     const newSocket = io(ENDPOINT, {
       transports: ['websocket'],
     });
@@ -89,17 +87,8 @@ export const MainPage = () => {
   }, [cardValues, ENDPOINT]);
 
   const resetVoting = () => {
-    const newSocket = io(ENDPOINT, {
-      transports: ['websocket'],
-    });
-
     socket.emit('reset');
-
-    newSocket.disconnect();
   };
-
-  const mySocketInfo = store.find((u) => u.userId === userId);
-  const vote = mySocketInfo && mySocketInfo.vote;
 
   const updateCardValues = (options) => {
     const values = [];
@@ -125,19 +114,12 @@ export const MainPage = () => {
           }}
         >
           <VotingHub
-            vote={vote}
-            cardValues={cardValues}
-            socket={socket}
-            cardsFlipped={cardsFlipped}
           />
           <div>
             <UserHub
-              store={store}
-              cardsFlipped={cardsFlipped}
-              socket={socket}
             />
             <button
-              disabled={!store.map((u) => u.vote).some((el) => el !== null)}
+              disabled={!users.map((u) => u.vote).some((el) => el !== null)}
               style={{ width: '100%', marginTop: '50px', height: '50px' }}
               onClick={() => {
                 setCardsFlipped(!cardsFlipped);

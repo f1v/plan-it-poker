@@ -1,9 +1,15 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import { CardsDisplay } from './CardsDisplay';
 import { Chart } from './Chart/Chart';
-export const VotingHub = ({ socket, cardsFlipped, vote, cardValues }) =>
-  !cardsFlipped ? (
-    <CardsDisplay socket={socket} vote={vote} cardValues={cardValues} />
+import {
+	RoomContext
+} from '../context/RoomContext';
+export const VotingHub = () => {
+	  const {
+	  	cardsFlipped
+	  } = useContext(RoomContext);
+  return !cardsFlipped ? (
+    <CardsDisplay />
   ) : (
     <Chart />
-  );
+  )};

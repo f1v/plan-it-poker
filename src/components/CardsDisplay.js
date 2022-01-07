@@ -1,10 +1,19 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {
 	Card
 } from './Card';
 import './Card.scss';
+import {
+	RoomContext
+} from '../context/RoomContext';
+import {
+	UserContext
+} from '../context/UserContext';
 
-export const CardsDisplay = ({ socket, vote, cardValues}) => {
+export const CardsDisplay = () => {
+	const {cardValues, socket } = useContext(RoomContext);
+	const {userObj} = useContext(UserContext);
+	const {vote} = userObj;
 return <div className='card-container'>
 	{cardValues.map(v => {
 		if (vote) {

@@ -1,21 +1,21 @@
 import React, { useState, useContext } from 'react';
 import DonutChart from 'react-donut-chart';
 import { compact, groupBy, map } from 'lodash';
-import { UserContext } from '../../context/UserContext';
+import { RoomContext } from '../../context/RoomContext';
 import { Legend } from './Legend';
 import './Chart.scss';
 
 export const Chart = () => {
-  const { storeContext } = useContext(UserContext);
+  const { users } = useContext(RoomContext);
   const [votes] = useState(
     compact(
       map(
-        storeContext,
+        users,
         (userVote) => typeof userVote.vote === 'number' && userVote.vote
       )
     )
   );
-  const groupedUsers = groupBy(storeContext, 'vote');
+  const groupedUsers = groupBy(users, 'vote');
 
   const colors = [
     'turquoise',

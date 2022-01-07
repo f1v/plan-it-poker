@@ -1,9 +1,13 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { UserContext } from '../context/UserContext';
+import {
+	RoomContext
+} from '../context/RoomContext';
 import './Card.scss';
 
-export const Card = ({ value, socket, disabled, selected }) => {
+export const Card = ({ value, disabled, selected }) => {
   const { userObj } = useContext(UserContext);
+  const { socket } = useContext(RoomContext);
   const [isSelected, setIsSelected] = useState(false);
 
   useEffect(() => {

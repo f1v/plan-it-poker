@@ -4,12 +4,15 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { UserProvider } from './context/UserContext';
+import { RoomProvider } from './context/RoomContext';
 
 ReactDOM.render(
   <React.StrictMode>
-    <UserProvider>
-      <App />
-    </UserProvider>
+    <RoomProvider>
+      <UserProvider>
+        <App />
+      </UserProvider>
+    </RoomProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
